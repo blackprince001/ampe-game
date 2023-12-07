@@ -18,26 +18,25 @@ struct AmpePlayer {
 
 impl AmpePlayer {
     pub fn play(&self, other: &AmpePlayer) -> bool {
+        use Leg::*;
+
         let won: bool = if self.playtype == other.playtype {
             // samefoot type
-            match (&self.leg_played, &other.leg_played) {
-                (Leg::Left, Leg::Left) => true,
-                (Leg::Right, Leg::Left) => false,
-                (Leg::Left, Leg::Right) => false,
-                (Leg::Right, Leg::Right) => true,
-            }
+            matches!(
+                (&self.leg_played, &other.leg_played),
+                (Left, Left) | (Right, Right)
+            )
         } else {
-            match (&self.leg_played, &other.leg_played) {
-                (Leg::Left, Leg::Left) => false,
-                (Leg::Right, Leg::Left) => true,
-                (Leg::Left, Leg::Right) => true,
-                (Leg::Right, Leg::Right) => false,
-            }
+            matches!(
+                (&self.leg_played, &other.leg_played),
+                (Right, Left) | (Left, Right)
+            )
         };
 
         won
     }
 }
+
 fn main() {
     let user = AmpePlayer {
         playtype: PlayerType::DifferentFoot,
